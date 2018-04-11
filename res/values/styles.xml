@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/theme_primary</item>
         <item name="colorPrimaryDark">@color/theme_primary_dark</item>
         <item name="colorAccent">@color/theme_accent</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowBackground">@color/update_background</item>
-        <item name="android:windowLightStatusBar">@bool/theme_is_light</item>
-        <item name="android:windowLightNavigationBar">@bool/theme_is_light</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
