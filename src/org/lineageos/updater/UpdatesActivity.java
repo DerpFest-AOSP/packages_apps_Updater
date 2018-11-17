@@ -49,6 +49,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -300,7 +301,7 @@ public class UpdatesActivity extends UpdatesListActivity {
             final long millis = System.currentTimeMillis();
             preferences.edit().putLong(Constants.PREF_LAST_UPDATE_CHECK, millis).apply();
             updateLastCheckedString();
-            if (json.exists() && preferences.getBoolean(Constants.PREF_AUTO_UPDATES_CHECK, true) &&
+            if (json.exists() && Utils.isUpdateCheckEnabled(this) &&
                     Utils.checkForNewUpdates(json, jsonNew)) {
                 UpdatesCheckReceiver.updateRepeatingUpdatesCheck(this);
             }
@@ -414,7 +415,8 @@ public class UpdatesActivity extends UpdatesListActivity {
 
     private void showPreferencesDialog() {
         final View view = LayoutInflater.from(this).inflate(R.layout.preferences_dialog, null);
-        final Switch autoCheck = view.findViewById(R.id.preferences_auto_updates_check);
+        final Spinner autoCheckInterval =
+                view.findViewById(R.id.preferences_auto_updates_check_interval);
         final Switch autoDelete = view.findViewById(R.id.preferences_auto_delete_updates);
         final Switch dataWarning = view.findViewById(R.id.preferences_mobile_data_warning);
         final Switch abPerfMode = view.findViewById(R.id.preferences_ab_perf_mode);
@@ -425,7 +427,7 @@ public class UpdatesActivity extends UpdatesListActivity {
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        autoCheck.setChecked(prefs.getBoolean(Constants.PREF_AUTO_UPDATES_CHECK, true));
+        autoCheckInterval.setSelection(Utils.getUpdateCheckSetting(this));
         autoDelete.setChecked(prefs.getBoolean(Constants.PREF_AUTO_DELETE_UPDATES, false));
         dataWarning.setChecked(prefs.getBoolean(Constants.PREF_MOBILE_DATA_WARNING, true));
         abPerfMode.setChecked(prefs.getBoolean(Constants.PREF_AB_PERF_MODE, false));
@@ -462,8 +464,8 @@ public class UpdatesActivity extends UpdatesListActivity {
                 .setView(view)
                 .setOnDismissListener(dialogInterface -> {
                     prefs.edit()
-                            .putBoolean(Constants.PREF_AUTO_UPDATES_CHECK,
-                                    autoCheck.isChecked())
+                            .putInt(Constants.PREF_AUTO_UPDATES_CHECK_INTERVAL,
+                                    autoCheckInterval.getSelectedItemPosition())
                             .putBoolean(Constants.PREF_AUTO_DELETE_UPDATES,
                                     autoDelete.isChecked())
                             .putBoolean(Constants.PREF_MOBILE_DATA_WARNING,
@@ -472,7 +474,7 @@ public class UpdatesActivity extends UpdatesListActivity {
                                     abPerfMode.isChecked())
                             .apply();
 
-                    if (autoCheck.isChecked()) {
+                    if (Utils.isUpdateCheckEnabled(this)) {
                         UpdatesCheckReceiver.scheduleRepeatingUpdatesCheck(this);
                     } else {
                         UpdatesCheckReceiver.cancelRepeatingUpdatesCheck(this);
