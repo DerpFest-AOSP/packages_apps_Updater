@@ -38,7 +38,7 @@ zip_name=`basename "$zip_path"`
 id=`echo "$zip_name" | sha1sum | cut -d' ' -f1`
 version=`echo "$zip_name" | cut -d'-' -f2`
 type=`echo "$zip_name" | cut -d'-' -f3`
-build_date=`echo "$zip_name" | cut -d'-' -f5 | cut -d. -f1
+build_date=`echo "$zip_name" | cut -d'-' -f5 | cut -d. -f1`
 timestamp=`date --date="$build_date 23:59:59" +%s`
 size=`stat -c "%s" "$zip_path"`
 
