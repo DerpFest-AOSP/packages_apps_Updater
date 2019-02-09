@@ -75,6 +75,7 @@
     <string name="menu_export_update">Export update</string>
     <string name="menu_show_changelog">Show changelog</string>
     <string name="menu_changelog_url" translatable="false">https://raw.githubusercontent.com/DerpFest-11/OTA/master/changelog_<xliff:g id="device_name">%1$s</xliff:g>.txt</string>
+    <string name="menu_local_update">Local installation</string>
 
     <string name="snack_updates_found">New updates found</string>
     <string name="snack_no_updates_found">No new updates found</string>
