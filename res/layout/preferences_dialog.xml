@@ -45,14 +45,6 @@
         android:text="@string/menu_mobile_data_warning"
         android:textSize="16sp" />
 
-    <Switch
-        android:id="@+id/preferences_ab_perf_mode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="@string/menu_ab_perf_mode"
-        android:textSize="16sp" />
-
     <Button
         android:id="@+id/preferences_custom_updater_uri"
         android:layout_width="match_parent"
@@ -61,4 +53,5 @@
         android:text="@string/menu_update_channel"
         android:textSize="16sp"
         style="?android:attr/borderlessButtonStyle" />
+
 </LinearLayout>
