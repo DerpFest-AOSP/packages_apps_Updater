@@ -28,6 +28,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.SystemProperties;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
@@ -422,10 +423,6 @@ public class UpdatesActivity extends UpdatesListActivity {
 
         if (!Utils.isABDevice()) {
             abPerfMode.setVisibility(View.GONE);
-        }
-
-        if (BuildInfoUtils.getBuildType().equalsIgnoreCase("Official")) {
-            updaterChannel.setVisibility(View.GONE);
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
