@@ -99,10 +99,6 @@ public class Utils {
             Log.d(TAG, update.getName() + " is older than/equal to the current build");
             return false;
         }
-        if (!update.getType().equalsIgnoreCase(BuildInfoUtils.getBuildType())) {
-            Log.d(TAG, update.getName() + " has type " + update.getType());
-            return false;
-        }
         return true;
     }
 
