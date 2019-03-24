@@ -18,6 +18,7 @@ package org.lineageos.updater;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -45,6 +46,9 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -414,9 +418,14 @@ public class UpdatesActivity extends UpdatesListActivity {
         Switch autoDelete = view.findViewById(R.id.preferences_auto_delete_updates);
         Switch dataWarning = view.findViewById(R.id.preferences_mobile_data_warning);
         Switch abPerfMode = view.findViewById(R.id.preferences_ab_perf_mode);
+        Button updaterChannel = view.findViewById(R.id.preferences_custom_updater_uri);
 
         if (!Utils.isABDevice()) {
             abPerfMode.setVisibility(View.GONE);
+        }
+
+        if (BuildInfoUtils.getBuildType().equalsIgnoreCase("Official")) {
+            updaterChannel.setVisibility(View.GONE);
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -424,6 +433,31 @@ public class UpdatesActivity extends UpdatesListActivity {
         autoDelete.setChecked(prefs.getBoolean(Constants.PREF_AUTO_DELETE_UPDATES, false));
         dataWarning.setChecked(prefs.getBoolean(Constants.PREF_MOBILE_DATA_WARNING, true));
         abPerfMode.setChecked(prefs.getBoolean(Constants.PREF_AB_PERF_MODE, false));
+        updaterChannel.setOnClickListener(v -> {
+            final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            final EditText input = new EditText(this);
+            alertDialog.setTitle(R.string.menu_update_channel);
+            alertDialog.setMessage(this.getString(R.string.dialog_custom_updater_channel));
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT);
+            lp.setMargins(16, 16, 16, 16);
+            input.setLayoutParams(lp);
+            input.setText(prefs.getString(Constants.PREF_UPDATER_OVERRIDE_URI, ""));
+            alertDialog.setView(input);
+            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.ok),
+                    (dialog, which) -> {
+                final String inputText = input.getText().toString();
+                if (!inputText.trim().isEmpty()) {
+                    prefs.edit().putString(Constants.PREF_UPDATER_OVERRIDE_URI, inputText).apply();
+                }
+                if (Utils.getCachedUpdateList(this).delete()) {
+                    Log.d(TAG, "Successfully deleted cached updates list");
+                }
+                downloadUpdatesList(true); // Force refresh
+            });
+            alertDialog.show();
+        });
 
         new AlertDialog.Builder(this)
                 .setTitle(R.string.menu_preferences)

@@ -99,7 +99,7 @@ public class Utils {
             Log.d(TAG, update.getName() + " is older than/equal to the current build");
             return false;
         }
-        if (!update.getType().equalsIgnoreCase(SystemProperties.get(Constants.PROP_RELEASE_TYPE))) {
+        if (!update.getType().equalsIgnoreCase(BuildInfoUtils.getBuildType())) {
             Log.d(TAG, update.getName() + " has type " + update.getType());
             return false;
         }
@@ -148,7 +148,7 @@ public class Utils {
     public static String getServerURL(Context context) {
         String device = SystemProperties.get(Constants.PROP_NEXT_DEVICE,
                 SystemProperties.get(Constants.PROP_DEVICE));
-        String type = SystemProperties.get(Constants.PROP_RELEASE_TYPE).toLowerCase(Locale.ROOT);
+        String type = BuildInfoUtils.getBuildType().toLowerCase(Locale.ROOT);
 
         String serverUrl = SystemProperties.get(Constants.PROP_UPDATER_URI);
         String overrideUrl = PreferenceManager.getDefaultSharedPreferences(context)

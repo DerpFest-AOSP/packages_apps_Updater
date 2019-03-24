@@ -144,4 +144,6 @@
     <string name="new_updates_channel_title">New updates</string>
     <string name="ongoing_channel_title">Ongoing downloads</string>
     <string name="update_failed_channel_title">Update failed</string>
+    <string name="menu_update_channel">Update channel</string>
+    <string name="dialog_custom_updater_channel">Enter URL for custom updater channel here</string>
 </resources>
