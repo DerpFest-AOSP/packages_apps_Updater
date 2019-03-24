@@ -151,8 +151,14 @@ public class Utils {
         String type = SystemProperties.get(Constants.PROP_RELEASE_TYPE).toLowerCase(Locale.ROOT);
 
         String serverUrl = SystemProperties.get(Constants.PROP_UPDATER_URI);
+        String overrideUrl = PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(Constants.PREF_UPDATER_OVERRIDE_URI, "");
         if (serverUrl.trim().isEmpty()) {
             serverUrl = context.getString(R.string.updater_server_url);
+        }
+        if (overrideUrl != null && !overrideUrl.trim().isEmpty()) {
+            Log.d(TAG, "Overriding serverUrl with " + overrideUrl);
+            serverUrl = overrideUrl;
         }
 
         return serverUrl.replace("{device}", device)
