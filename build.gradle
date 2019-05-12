@@ -17,8 +17,8 @@ buildscript {
 }
 
 tasks.wrapper {
-    gradleVersion = "5.3"
-    distributionType = DistributionType.ALL
+    gradleVersion = "5.4.1"
+    distributionType = Wrapper.DistributionType.ALL
 }
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
