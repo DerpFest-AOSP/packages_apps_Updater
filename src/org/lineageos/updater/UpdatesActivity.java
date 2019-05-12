@@ -28,7 +28,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.SystemProperties;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
@@ -85,12 +84,12 @@ public class UpdatesActivity extends UpdatesListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_updates);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mAdapter = new UpdatesListAdapter(this);
         recyclerView.setAdapter(mAdapter);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        RecyclerView.ItemAnimator animator = recyclerView.getItemAnimator();
+        final RecyclerView.ItemAnimator animator = recyclerView.getItemAnimator();
         if (animator instanceof SimpleItemAnimator) {
             ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
         }
@@ -113,26 +112,26 @@ public class UpdatesActivity extends UpdatesListActivity {
             }
         };
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        TextView headerTitle = (TextView) findViewById(R.id.header_title);
+        final TextView headerTitle = (TextView) findViewById(R.id.header_title);
         headerTitle.setText(getString(R.string.header_title_text,
                 BuildInfoUtils.getBuildVersion()));
 
         updateLastCheckedString();
 
-        TextView headerBuildVersion = (TextView) findViewById(R.id.header_build_version);
+        final TextView headerBuildVersion = (TextView) findViewById(R.id.header_build_version);
         headerBuildVersion.setText(
                 getString(R.string.header_android_version, Build.VERSION.RELEASE));
 
-        TextView headerDeviceName = (TextView) findViewById(R.id.header_device_name);
+        final TextView headerDeviceName = (TextView) findViewById(R.id.header_device_name);
         headerDeviceName.setText(
                 getString(R.string.list_device_name, BuildInfoUtils.getDevice()));
 
-        TextView headerBuildDate = (TextView) findViewById(R.id.header_build_date);
+        final TextView headerBuildDate = (TextView) findViewById(R.id.header_build_date);
         headerBuildDate.setText(StringGenerator.getDateLocalizedUTC(this,
                 DateFormat.LONG, BuildInfoUtils.getBuildDateTimestamp()));
 
@@ -224,12 +223,12 @@ public class UpdatesActivity extends UpdatesListActivity {
         return true;
     }
 
-    private ServiceConnection mConnection = new ServiceConnection() {
+    private final ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName className,
                 IBinder service) {
-            UpdaterService.LocalBinder binder = (UpdaterService.LocalBinder) service;
+            final UpdaterService.LocalBinder binder = (UpdaterService.LocalBinder) service;
             mUpdaterService = binder.getService();
             mAdapter.setUpdaterController(mUpdaterService.getUpdaterController());
             getUpdatesList();
@@ -246,11 +245,11 @@ public class UpdatesActivity extends UpdatesListActivity {
     private void loadUpdatesList(File jsonFile, boolean manualRefresh)
             throws IOException, JSONException {
         Log.d(TAG, "Adding remote updates");
-        UpdaterController controller = mUpdaterService.getUpdaterController();
+        final UpdaterController controller = mUpdaterService.getUpdaterController();
         boolean newUpdates = false;
 
-        List<UpdateInfo> updates = Utils.parseJson(jsonFile, true);
-        List<String> updatesOnline = new ArrayList<>();
+        final List<UpdateInfo> updates = Utils.parseJson(jsonFile, true);
+        final List<String> updatesOnline = new ArrayList<>();
         for (UpdateInfo update : updates) {
             newUpdates |= controller.addUpdate(update);
             updatesOnline.add(update.getDownloadId());
@@ -263,8 +262,8 @@ public class UpdatesActivity extends UpdatesListActivity {
                     Snackbar.LENGTH_SHORT);
         }
 
-        List<String> updateIds = new ArrayList<>();
-        List<UpdateInfo> sortedUpdates = controller.getUpdates();
+        final List<String> updateIds = new ArrayList<>();
+        final List<UpdateInfo> sortedUpdates = controller.getUpdates();
         if (sortedUpdates.isEmpty()) {
             findViewById(R.id.no_new_updates_view).setVisibility(View.VISIBLE);
             findViewById(R.id.recycler_view).setVisibility(View.GONE);
@@ -281,7 +280,7 @@ public class UpdatesActivity extends UpdatesListActivity {
     }
 
     private void getUpdatesList() {
-        File jsonFile = Utils.getCachedUpdateList(this);
+        final File jsonFile = Utils.getCachedUpdateList(this);
         if (jsonFile.exists()) {
             try {
                 loadUpdatesList(jsonFile, false);
@@ -297,8 +296,8 @@ public class UpdatesActivity extends UpdatesListActivity {
     private void processNewJson(File json, File jsonNew, boolean manualRefresh) {
         try {
             loadUpdatesList(jsonNew, manualRefresh);
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            long millis = System.currentTimeMillis();
+            final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            final long millis = System.currentTimeMillis();
             preferences.edit().putLong(Constants.PREF_LAST_UPDATE_CHECK, millis).apply();
             updateLastCheckedString();
             if (json.exists() && preferences.getBoolean(Constants.PREF_AUTO_UPDATES_CHECK, true) &&
@@ -317,7 +316,7 @@ public class UpdatesActivity extends UpdatesListActivity {
     private void downloadUpdatesList(final boolean manualRefresh) {
         final File jsonFile = Utils.getCachedUpdateList(this);
         final File jsonFileTmp = new File(jsonFile.getAbsolutePath() + UUID.randomUUID());
-        String url = Utils.getServerURL(this);
+        final String url = Utils.getServerURL(this);
         Log.d(TAG, "Checking " + url);
 
         DownloadClient.DownloadCallback callback = new DownloadClient.DownloadCallback() {
@@ -368,15 +367,15 @@ public class UpdatesActivity extends UpdatesListActivity {
         final SharedPreferences preferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
         long lastCheck = preferences.getLong(Constants.PREF_LAST_UPDATE_CHECK, -1) / 1000;
-        String lastCheckString = getString(R.string.header_last_updates_check,
+        final String lastCheckString = getString(R.string.header_last_updates_check,
                 StringGenerator.getDateLocalized(this, DateFormat.LONG, lastCheck),
                 StringGenerator.getTimeLocalized(this, lastCheck));
-        TextView headerLastCheck = (TextView) findViewById(R.id.header_last_check);
+        final TextView headerLastCheck = (TextView) findViewById(R.id.header_last_check);
         headerLastCheck.setText(lastCheckString);
     }
 
     private void handleDownloadStatusChange(String downloadId) {
-        UpdateInfo update = mUpdaterService.getUpdaterController().getUpdate(downloadId);
+        final UpdateInfo update = mUpdaterService.getUpdaterController().getUpdate(downloadId);
         switch (update.getStatus()) {
             case PAUSED_ERROR:
                 showSnackbar(R.string.snack_download_failed, Snackbar.LENGTH_LONG);
@@ -414,12 +413,12 @@ public class UpdatesActivity extends UpdatesListActivity {
     }
 
     private void showPreferencesDialog() {
-        View view = LayoutInflater.from(this).inflate(R.layout.preferences_dialog, null);
-        Switch autoCheck = view.findViewById(R.id.preferences_auto_updates_check);
-        Switch autoDelete = view.findViewById(R.id.preferences_auto_delete_updates);
-        Switch dataWarning = view.findViewById(R.id.preferences_mobile_data_warning);
-        Switch abPerfMode = view.findViewById(R.id.preferences_ab_perf_mode);
-        Button updaterChannel = view.findViewById(R.id.preferences_custom_updater_uri);
+        final View view = LayoutInflater.from(this).inflate(R.layout.preferences_dialog, null);
+        final Switch autoCheck = view.findViewById(R.id.preferences_auto_updates_check);
+        final Switch autoDelete = view.findViewById(R.id.preferences_auto_delete_updates);
+        final Switch dataWarning = view.findViewById(R.id.preferences_mobile_data_warning);
+        final Switch abPerfMode = view.findViewById(R.id.preferences_ab_perf_mode);
+        final Button updaterChannel = view.findViewById(R.id.preferences_custom_updater_uri);
 
         if (!Utils.isABDevice()) {
             abPerfMode.setVisibility(View.GONE);
