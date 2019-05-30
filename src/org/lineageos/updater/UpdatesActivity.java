@@ -444,7 +444,9 @@ public class UpdatesActivity extends UpdatesListActivity {
             alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.ok),
                     (dialog, which) -> {
                 final String inputText = input.getText().toString();
-                if (!inputText.trim().isEmpty()) {
+                if (inputText.trim().isEmpty()) {
+                    prefs.edit().remove(Constants.PREF_UPDATER_OVERRIDE_URI).apply();
+                } else {
                     prefs.edit().putString(Constants.PREF_UPDATER_OVERRIDE_URI, inputText).apply();
                 }
                 if (Utils.getCachedUpdateList(this).delete()) {
