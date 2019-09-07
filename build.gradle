@@ -12,7 +12,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.android.tools.build:gradle:3.5.0'
     }
 }
 
@@ -28,11 +28,11 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
-        minSdkVersion 28
-        targetSdkVersion 28
+        minSdkVersion 27
+        targetSdkVersion 29
     }
 
     lintOptions {
@@ -67,10 +67,9 @@ android {
 dependencies {
     compileOnly fileTree(dir: 'system_libs/', include: ['*.jar'])
 
-    def supportLibVersion = "27.1.0"
-    implementation "com.android.support:appcompat-v7:${supportLibVersion}"
-    implementation "com.android.support:cardview-v7:${supportLibVersion}"
-    implementation "com.android.support:design:${supportLibVersion}"
-    implementation "com.android.support:preference-v7:${supportLibVersion}"
-    implementation "com.android.support:recyclerview-v7:${supportLibVersion}"
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.preference:preference:1.1.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
 }
