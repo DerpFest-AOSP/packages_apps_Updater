@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2023 DerpFest
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="blocked_update_dialog_message_custom">Dieses Update kann nicht mit dem DerpFest-Updater installiert werden. Versuche bitte das Update über das Recovery/Fastboot zu installieren.</string>
+</resources>
