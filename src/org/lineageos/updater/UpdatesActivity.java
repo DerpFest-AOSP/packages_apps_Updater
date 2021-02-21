@@ -415,7 +415,7 @@ public class UpdatesActivity extends UpdatesListActivity {
         final SharedPreferences preferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
         long lastCheck = preferences.getLong(Constants.PREF_LAST_UPDATE_CHECK, -1) / 1000;
-        @SuppressLint("StringFormatMatches") String lastCheckString = getString(R.string.header_last_updates_check,
+        String lastCheckString = getString(R.string.header_last_updates_check,
                 StringGenerator.getTimeLocalized(this, lastCheck));
         TextView headerLastCheck = (TextView) findViewById(R.id.header_last_check);
         headerLastCheck.setText(lastCheckString);
