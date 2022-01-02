@@ -80,8 +80,6 @@
     <string name="menu_show_changelog">Show changelog</string>
     <string name="menu_changelog_url" translatable="false">https://github.com/PotatoProject/vendor_potato/blob/dumaloo-release/CHANGELOG.md</string>
     <string name="menu_update_recovery">Update recovery</string>
-    <string name="menu_update_channel">Update channel</string>
-    <string name="menu_update_channel_apply">Apply</string>
     <string name="toast_forced_update_recovery">It is impossible to disable Lineage Recovery updates on this device.</string>
 
     <string name="snack_updates_found">New update available</string>
@@ -159,5 +157,4 @@
 
     <string name="changelog_url" translatable="false">https://github.com/PotatoProject/vendor_potato/blob/dumaloo-release/CHANGELOG.md</string>
     <string name="changelog_fail">Failed to retrieve changelog</string>
-
 </resources>
