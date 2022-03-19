@@ -15,7 +15,6 @@
  */
 package org.lineageos.updater;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -71,6 +70,10 @@ import java.util.List;
 public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.ViewHolder> {
 
     private static final String TAG = "UpdateListAdapter";
+
+    private static final int BATTERY_PLUGGED_ANY = BatteryManager.BATTERY_PLUGGED_AC
+            | BatteryManager.BATTERY_PLUGGED_USB
+            | BatteryManager.BATTERY_PLUGGED_WIRELESS;
 
     private final float mAlphaDisabledValue;
 
@@ -378,7 +381,7 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
                 final boolean canInstall = Utils.canInstall(update);
                 clickListener = enabled ? view -> {
                     if (canInstall) {
-                        Utils.getInstallDialog(downloadId, mActivity).show();
+                        getInstallDialog(downloadId).show();
                     } else {
                         mActivity.showSnackbar(R.string.snack_update_not_installable,
                                 Snackbar.LENGTH_LONG);
@@ -456,6 +459,43 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
         };
     }
 
+    private AlertDialog.Builder getInstallDialog(final String downloadId) {
+        if (!isBatteryLevelOk()) {
+            Resources resources = mActivity.getResources();
+            String message = resources.getString(R.string.dialog_battery_low_message_pct,
+                    resources.getInteger(R.integer.battery_ok_percentage_discharging),
+                    resources.getInteger(R.integer.battery_ok_percentage_charging));
+            return new AlertDialog.Builder(mActivity)
+                    .setTitle(R.string.dialog_battery_low_title)
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.ok, null);
+        }
+        UpdateInfo update = mUpdaterController.getUpdate(downloadId);
+        int resId;
+        try {
+            if (Utils.isABUpdate(update.getFile())) {
+                resId = R.string.apply_update_dialog_message_ab;
+            } else {
+                resId = R.string.apply_update_dialog_message;
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Could not determine the type of the update");
+            return null;
+        }
+
+        String buildDate = StringGenerator.getDateLocalizedUTC(mActivity,
+                DateFormat.MEDIUM, update.getTimestamp());
+        String buildInfoText = mActivity.getString(R.string.list_build_version_date,
+                BuildInfoUtils.getBuildVersion(), buildDate);
+        return new AlertDialog.Builder(mActivity)
+                .setTitle(R.string.apply_update_dialog_title)
+                .setMessage(mActivity.getString(resId, buildInfoText,
+                        mActivity.getString(android.R.string.ok)))
+                .setPositiveButton(android.R.string.ok,
+                        (dialog, which) -> Utils.triggerUpdate(mActivity, downloadId))
+                .setNegativeButton(android.R.string.cancel, null);
+    }
+
     private AlertDialog.Builder getCancelInstallationDialog() {
         return new AlertDialog.Builder(mActivity)
                 .setMessage(R.string.cancel_installation_dialog_message)
@@ -468,7 +508,6 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
                 .setNegativeButton(android.R.string.cancel, null);
     }
 
-    @SuppressLint("RestrictedApi")
     private void startActionMode(final UpdateInfo update, final boolean canDelete, View anchor) {
         mSelectedDownload = update.getDownloadId();
         notifyItemChanged(update.getDownloadId());
@@ -574,5 +613,18 @@ public class UpdatesListAdapter extends RecyclerView.Adapter<UpdatesListAdapter.
         }
     }
 
-
+    private boolean isBatteryLevelOk() {
+        Intent intent = mActivity.registerReceiver(null,
+                new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        if (!intent.getBooleanExtra(BatteryManager.EXTRA_PRESENT, false)) {
+            return true;
+        }
+        int percent = Math.round(100.f * intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 100) /
+                intent.getIntExtra(BatteryManager.EXTRA_SCALE, 100));
+        int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, 0);
+        int required = (plugged & BATTERY_PLUGGED_ANY) != 0 ?
+                mActivity.getResources().getInteger(R.integer.battery_ok_percentage_charging) :
+                mActivity.getResources().getInteger(R.integer.battery_ok_percentage_discharging);
+        return percent >= required;
+    }
 }
