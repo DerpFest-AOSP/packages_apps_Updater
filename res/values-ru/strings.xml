@@ -28,6 +28,7 @@
     <string name="installation_suspended_notification">Установка приостановлена</string>
     <string name="new_updates_found_title">Доступны обновления</string>
     <string name="text_download_speed">%1$s, %2$s/с</string>
+    <string name="update_button">Проверить обновления</string>
     <string name="pause_button">Пауза</string>
     <string name="resume_button">Возобновить</string>
     <string name="suspend_button">Приостановить</string>
@@ -62,6 +63,8 @@
     <string name="snack_update_not_installable">Это обновление не может быть установлено поверх текущей сборки.</string>
     <string name="header_title_text">DerpFest\n%1$s</string>
     <string name="header_android_version">Android version: <xliff:g id="version" example="7.1.2">%1$s</xliff:g></string>
+    <string name="header_security_patch">Обновление системы безопасности: <xliff:g id="patch" example="January 5 2019">%1$s</xliff:g></string>
+    <string name="header_last_updates_check">Последняя успешная проверка обновлений было в <xliff:g id="time" example="01:23">%1$s</xliff:g></string>
     <string name="list_build_version">DerpFest <xliff:g id="version" example="14.1">%1$s</xliff:g></string>
     <string name="list_build_version_date">DerpFest <xliff:g id="version" example="14.1">%1$s</xliff:g> - <xliff:g id="date" example="July 11, 2017">%2$s</xliff:g></string>
     <string name="list_download_progress_new"><xliff:g id="filesize_without_unit" example="12.2">%1$s</xliff:g> из <xliff:g id="filesize_without_unit" example="310 MB">%2$s</xliff:g> • <xliff:g id="percentage" example="56">%3$s</xliff:g></string>
@@ -75,6 +78,7 @@
     <string name="action_info">Информация</string>
     <string name="action_delete">Удалить</string>
     <string name="action_cancel">Отмена</string>
+    <string name="action_changelog">Чейнджлог</string>
     <string name="confirm_delete_dialog_title">Удалить файл</string>
     <string name="confirm_delete_dialog_message">Удалить выбранный файл обновления?</string>
     <string name="apply_update_dialog_title">Применить обновление</string>
@@ -115,4 +119,5 @@
     <string name="new_updates_channel_title">Доступны обновления</string>
     <string name="ongoing_channel_title">Текущие загрузки</string>
     <string name="update_failed_channel_title">Сбой обновления</string>
+    <string name="changelog_fail">Не удалось получить чейнджлог</string>
 </resources>
